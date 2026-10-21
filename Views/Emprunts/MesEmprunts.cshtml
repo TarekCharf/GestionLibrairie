@@ -1,0 +1,94 @@
+﻿@model IEnumerable<ProjetLibrairie.Models.Emprunt>
+
+@{
+    ViewData["Title"] = "Mes emprunts";
+}
+
+<div class="d-flex align-items-center justify-content-between flex-wrap gap-3 mb-4">
+    <div>
+        <h2 class="fw-bold text-slate-900 mb-1">Mon historique de lecture</h2>
+        <div class="text-muted">Consultez l'historique et surveillez vos dates de retour réglementaires.</div>
+    </div>
+    <a class="btn btn-primary d-inline-flex align-items-center shadow-sm" asp-controller="Emprunts" asp-action="LivresDisponibles">
+        <i class="bi bi-book-half me-1.5"></i> Emprunter un nouveau livre
+    </a>
+</div>
+
+@if (Model == null || !Model.Any())
+{
+    <div class="card border-0 shadow-sm text-center py-5">
+        <div class="card-body">
+            <div class="text-muted mb-3"><i class="bi bi-journal-text opacity-40" style="font-size: 3.5rem;"></i></div>
+            <h5 class="fw-bold text-slate-800">Aucun emprunt actif</h5>
+            <p class="text-muted small max-w-md mx-auto">Votre carte de bibliothèque est vierge d'emprunts en cours. Lancez-vous dans une nouvelle découverte littéraire dès maintenant !</p>
+            <a class="btn btn-outline-primary btn-sm mt-2" asp-controller="Emprunts" asp-action="LivresDisponibles">Feuilleter le catalogue</a>
+        </div>
+    </div>
+}
+else
+{
+    <div class="card border-0 shadow-sm">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead>
+                        <tr>
+                            <th class="ps-4">Ouvrage</th>
+                            <th>Date emprunt</th>
+                            <th>Date limite de retour</th>
+                            <th>Date restitution</th>
+                            <th class="text-center pe-4">Statut de l'emprunt</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var e in Model)
+                        {
+                            bool rendu = e.DateRetour.HasValue;
+                            var limite = e.DateEmprunt.AddDays(14);
+                            bool enRetard = !rendu && DateTime.Now.Date > limite.Date;
+
+                            <tr>
+                                <td class="ps-4">
+                                    <div class="fw-bold text-slate-900">@(e.Livre?.Titre ?? "(Livre introuvable)")</div>
+                                    <div class="text-muted small">par @e.Livre?.Auteur</div>
+                                </td>
+                                <td class="text-secondary small font-monospace">@e.DateEmprunt.ToString("dd/MM/yyyy")</td>
+                                <td class="text-slate-800 fw-semibold small font-monospace">@limite.ToString("dd/MM/yyyy")</td>
+                                <td class="small font-monospace">
+                                    @if (rendu)
+                                    {
+                                        <span class="text-success"><i class="bi bi-calendar2-check me-1"></i> Le @e.DateRetour?.ToString("dd/MM/yyyy")</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">-</span>
+                                    }
+                                </td>
+                                <td class="text-center pe-4">
+                                    @if (rendu)
+                                    {
+                                        <span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-10 px-2.5 py-1 rounded-pill small fw-semibold">
+                                            Rendu avec succès
+                                        </span>
+                                    }
+                                    else if (enRetard)
+                                    {
+                                        <span class="badge bg-danger bg-opacity-10 text-danger border border-danger border-opacity-10 px-2.5 py-1 rounded-pill small fw-semibold animation-pulse">
+                                            Restitution en retard
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-warning bg-opacity-10 text-warning border border-warning border-opacity-10 px-2.5 py-1 rounded-pill small fw-semibold">
+                                            En cours de lecture
+                                        </span>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+}

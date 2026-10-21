@@ -1,0 +1,298 @@
+﻿@model ProjetLibrairie.ViewModels.StatistiquesViewModel
+@{
+    ViewData["Title"] = "Accueil";
+}
+
+<div class="d-flex align-items-center justify-content-between flex-wrap gap-3 mb-4">
+    <div>
+        <h2 class="fw-bold text-slate-900 mb-1">Tableau de bord</h2>
+        <div class="text-muted">Vue d'ensemble et indicateurs clés de la bibliothèque</div>
+    </div>
+    <a class="btn btn-primary d-inline-flex align-items-center shadow-sm" asp-controller="Accueil" asp-action="Recherche">
+        <i class="bi bi-search me-2"></i> Recherche avancée
+    </a>
+</div>
+
+<div class="row g-4 mb-4">
+    <div class="col-12 col-sm-6 col-md-3">
+        <div class="card h-100 border-0 shadow-sm">
+            <div class="card-body d-flex align-items-center justify-content-between">
+                <div>
+                    <div class="text-muted small fw-medium text-uppercase tracking-wider mb-1">Emprunts actifs</div>
+                    <div class="display-6 fw-bold text-dark">@Model.EmpruntsActifs</div>
+                </div>
+                <div class="bg-primary bg-opacity-10 text-primary rounded-3 p-3 d-flex align-items-center justify-content-center" style="width: 56px; height: 56px;">
+                    <i class="bi bi-arrow-left-right fs-3"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12 col-sm-6 col-md-3">
+        <div class="card h-100 border-0 shadow-sm">
+            <div class="card-body d-flex align-items-center justify-content-between">
+                <div>
+                    <div class="text-muted small fw-medium text-uppercase tracking-wider mb-1">Livres disponibles</div>
+                    <div class="display-6 fw-bold text-success">@Model.LivresDisponibles</div>
+                </div>
+                <div class="bg-success bg-opacity-10 text-success rounded-3 p-3 d-flex align-items-center justify-content-center" style="width: 56px; height: 56px;">
+                    <i class="bi bi-check-circle-fill fs-3"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12 col-sm-6 col-md-3">
+        <div class="card h-100 border-0 shadow-sm">
+            <div class="card-body d-flex align-items-center justify-content-between">
+                <div>
+                    <div class="text-muted small fw-medium text-uppercase tracking-wider mb-1">Livres empruntés</div>
+                    <div class="display-6 fw-bold text-warning">@Model.LivresEmpruntes</div>
+                </div>
+                <div class="bg-warning bg-opacity-10 text-warning rounded-3 p-3 d-flex align-items-center justify-content-center" style="width: 56px; height: 56px;">
+                    <i class="bi bi-book-half fs-3"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12 col-sm-6 col-md-3">
+        <div class="card h-100 border-0 shadow-sm">
+            <div class="card-body d-flex align-items-center justify-content-between">
+                <div>
+                    <div class="text-muted small fw-medium text-uppercase tracking-wider mb-1">Adhérents inscrits</div>
+                    <div class="display-6 fw-bold text-dark">@Model.NombreAdherents</div>
+                </div>
+                <div class="bg-info bg-opacity-10 text-info rounded-3 p-3 d-flex align-items-center justify-content-center" style="width: 56px; height: 56px;">
+                    <i class="bi bi-people-fill fs-3"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4 mb-5">
+    <div class="col-12 col-lg-6">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-header border-0 py-3 d-flex align-items-center bg-transparent">
+                <div class="bg-primary bg-opacity-10 text-primary rounded-2 p-2 me-3">
+                    <i class="bi bi-award fs-5"></i>
+                </div>
+                <div>
+                    <h5 class="card-title fw-bold mb-0">Top 5 des livres les plus demandés</h5>
+                    <div class="text-muted small">Basé sur le volume total historique des emprunts</div>
+                </div>
+            </div>
+            <div class="card-body pt-0">
+                @if (Model.TopLivres == null || !Model.TopLivres.Any())
+                {
+                    <div class="text-center text-muted py-5">
+                        <i class="bi bi-inbox fs-2 d-block mb-2 text-opacity-50"></i>
+                        Aucune donnée d'emprunt enregistrée pour le moment.
+                    </div>
+                }
+                else
+                {
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead>
+                                <tr>
+                                    <th style="width: 50%;">Livre</th>
+                                    <th style="width: 35%;">Auteur</th>
+                                    <th class="text-end" style="width: 15%;">Emprunts</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var x in Model.TopLivres)
+                                {
+                                    <tr>
+                                        <td class="fw-semibold">
+                                            <a class="text-decoration-none text-primary" asp-controller="Livres" asp-action="Details" asp-route-id="@x.LivreId">
+                                                @x.Titre
+                                            </a>
+                                        </td>
+                                        <td class="text-muted">@x.Auteur</td>
+                                        <td class="text-end fw-bold text-slate-700">
+                                            <span class="badge bg-light text-dark border px-2 py-1.5">@x.NbEmprunts</span>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12 col-lg-6">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-header border-0 py-3 d-flex align-items-center bg-transparent">
+                <div class="bg-primary bg-opacity-10 text-primary rounded-2 p-2 me-3">
+                    <i class="bi bi-person-lines-fill fs-5"></i>
+                </div>
+                <div>
+                    <h5 class="card-title fw-bold mb-0">Top 5 des plus grands lecteurs</h5>
+                    <div class="text-muted small">Classement selon l’historique d’activité des adhérents</div>
+                </div>
+            </div>
+            <div class="card-body pt-0">
+                @if (Model.TopAdherents == null || !Model.TopAdherents.Any())
+                {
+                    <div class="text-center text-muted py-5">
+                        <i class="bi bi-inbox fs-2 d-block mb-2 text-opacity-50"></i>
+                        Aucun profil actif trouvé.
+                    </div>
+                }
+                else
+                {
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead>
+                                <tr>
+                                    <th style="width: 45%;">Adhérent</th>
+                                    <th style="width: 40%;">Adresse Email</th>
+                                    <th class="text-end" style="width: 15%;">Emprunts</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var x in Model.TopAdherents)
+                                {
+                                    <tr>
+                                        <td class="fw-semibold text-slate-900">@x.NomComplet</td>
+                                        <td class="text-muted">@x.Email</td>
+                                        <td class="text-end fw-bold text-slate-700">
+                                            <span class="badge bg-light text-dark border px-2 py-1.5">@x.NbEmprunts</span>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-lg-6">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-header border-0 py-3 d-flex align-items-center bg-transparent">
+                <div class="bg-primary bg-opacity-10 text-primary rounded-2 p-2 me-3">
+                    <i class="bi bi-award fs-5"></i>
+                </div>
+                <div>
+                    <h5 class="card-title fw-bold mb-0">Top 5 des livres les plus aimés</h5>
+                    <div class="text-muted small">Basé sur le rating total des livres</div>
+                </div>
+            </div>
+            <div class="card-body pt-0">
+                @if (Model.TopLivresRatings == null || !Model.TopLivresRatings.Any())
+                {
+                    <div class="text-center text-muted py-5">
+                        <i class="bi bi-inbox fs-2 d-block mb-2 text-opacity-50"></i>
+                        Aucune donnée de rating enregistrée pour le moment.
+                    </div>
+                }
+                else
+                {
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead>
+                                <tr>
+                                    <th style="width: 50%;">Livre</th>
+                                    <th style="width: 35%;">Auteur</th>
+                                    <th class="text-end" style="width: 15%;">Total Ratings</th>
+                                    <th class="text-end" style="width: 15%;">Moyenne Ratings</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var x in Model.TopLivresRatings)
+                                {
+                                    <tr>
+                                        <td class="fw-semibold">
+                                            <a class="text-decoration-none text-primary" asp-controller="Livres" asp-action="Details" asp-route-id="@x.LivreId">
+                                                @x.Titre
+                                            </a>
+                                        </td>
+                                        <td class="text-muted">@x.Auteur</td>
+                                        <td class="text-end fw-bold text-slate-700">
+                                            <span class="badge bg-light text-dark border px-2 py-1.5">@x.NbRatings</span>
+                                        </td>
+                                        <td class="text-end fw-bold text-slate-700">
+                                            <span class="badge bg-light text-dark border px-2 py-1.5">@x.NoteMoyenne</span>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12 col-lg-6">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-header border-0 py-3 d-flex align-items-center bg-transparent">
+                <div class="bg-primary bg-opacity-10 text-primary rounded-2 p-2 me-3">
+                    <i class="bi bi-person-lines-fill fs-5"></i>
+                </div>
+                <div>
+                    <h5 class="card-title fw-bold mb-0">Top 5 des meilleurs catégories</h5>
+                    <div class="text-muted small">Basé sur le volume total historique des emprunts</div>
+                </div>
+            </div>
+            <div class="card-body pt-0">
+                @if (Model.TopCategories == null || !Model.TopCategories.Any())
+                {
+                    <div class="text-center text-muted py-5">
+                        <i class="bi bi-inbox fs-2 d-block mb-2 text-opacity-50"></i>
+                        Aucune donnée de catégorie enregistrée pour le moment.
+                    </div>
+                }
+                else
+                {
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead>
+                                <tr>
+                                    <th style="width: 45%;">Catégorie</th>
+                                    <th class="text-end" style="width: 15%;">Emprunts</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var x in Model.TopCategories)
+                                {
+                                    <tr>
+                                        <td class="fw-semibold text-slate-900">@x.Nom</td>
+                                        <td class="text-end fw-bold text-slate-700">
+                                            <span class="badge bg-light text-dark border px-2 py-1.5">@x.NbEmprunts</span>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card border-0 shadow-md bg-white p-2">
+    <div class="card-body">
+        <h6 class="fw-bold mb-2 text-slate-900 d-flex align-items-center">
+            <i class="bi bi-lightning-charge-fill text-warning me-2"></i> Recherche instantanée
+        </h6>
+        <form asp-controller="Accueil" asp-action="Recherche" method="get" class="row g-2">
+            <div class="col-12 col-md-10">
+                <div class="input-group">
+                    <span class="input-group-text bg-light border-end-0 text-muted"><i class="bi bi-search"></i></span>
+                    <input class="form-control bg-light border-start-0 ps-0" name="q" placeholder="Rechercher par titre, auteur, genre, catégorie..." autocomplete="off" />
+                </div>
+            </div>
+            <div class="col-12 col-md-2 d-grid">
+                <button class="btn btn-primary shadow-sm" type="submit">Rechercher</button>
+            </div>
+        </form>
+    </div>
+</div>

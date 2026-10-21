@@ -1,0 +1,99 @@
+﻿@model ProjetLibrairie.ViewModels.ProfilViewModel
+@{
+    ViewData["Title"] = "Modifier mon profil";
+}
+
+<div class="d-flex align-items-center justify-content-between flex-wrap gap-3 mb-4">
+    <div>
+        <h2 class="fw-bold text-slate-900 mb-1">Modifier mon profil</h2>
+        <div class="text-muted">Mettez à jour vos coordonnées ou changez votre mot de passe d'accès.</div>
+    </div>
+    <a class="btn btn-outline-secondary d-inline-flex align-items-center" asp-action="Details" asp-route-id="@Model.Id">
+        <i class="bi bi-arrow-left me-2"></i> Annuler et retourner au profil
+    </a>
+</div>
+
+<div class="row g-4">
+    <div class="col-12 col-lg-8 mx-auto">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body p-4 p-sm-5">
+
+                <form asp-action="Modifier" method="post" class="row g-4">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" asp-for="Id" />
+
+                    @if (!ViewData.ModelState.IsValid)
+                    {
+                        <div class="col-12">
+                            <div class="alert alert-danger border-0 shadow-sm d-flex align-items-start gap-2 mb-0" role="alert">
+                                <i class="bi bi-exclamation-triangle-fill fs-5 mt-0.5"></i>
+                                <div>
+                                    <h6 class="fw-bold mb-1">Veuillez corriger les erreurs suivantes :</h6>
+                                    <div asp-validation-summary="All" class="small text-danger"></div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+
+                    <div class="col-12">
+                        <div class="text-muted small text-uppercase fw-bold tracking-wider border-bottom pb-2 mb-1"><i class="bi bi-info-circle me-1"></i> Coordonnées civiles</div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label asp-for="Nom" class="form-label fw-semibold text-slate-700">Nom</label>
+                        <input asp-for="Nom" class="form-control" placeholder="Votre nom de famille" />
+                        <span asp-validation-for="Nom" class="text-danger small mt-1 d-block"></span>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label asp-for="Prenom" class="form-label fw-semibold text-slate-700">Prénom</label>
+                        <input asp-for="Prenom" class="form-control" placeholder="Votre prénom" />
+                        <span asp-validation-for="Prenom" class="text-danger small mt-1 d-block"></span>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label asp-for="Email" class="form-label fw-semibold text-slate-700">Adresse e-mail</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light text-muted"><i class="bi bi-envelope"></i></span>
+                            <input asp-for="Email" class="form-control" placeholder="nom@exemple.com" />
+                        </div>
+                        <span asp-validation-for="Email" class="text-danger small mt-1 d-block"></span>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label asp-for="Login" class="form-label fw-semibold text-slate-700">Identifiant (Nom d'utilisateur)</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light text-muted"><i class="bi bi-person-badge"></i></span>
+                            <input asp-for="Login" class="form-control" placeholder="Nom d'utilisateur" />
+                        </div>
+                        <span asp-validation-for="Login" class="text-danger small mt-1 d-block"></span>
+                    </div>
+
+                    <div class="col-12 mt-5">
+                        <div class="text-muted small text-uppercase fw-bold tracking-wider border-bottom pb-2 mb-1"><i class="bi bi-shield-lock me-1"></i> Sécurité du compte</div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label asp-for="NouveauMotDePasse" class="form-label fw-semibold text-slate-700">Nouveau mot de passe</label>
+                        <input asp-for="NouveauMotDePasse" class="form-control" type="password" autocomplete="new-password" placeholder="Laisser vide pour ne pas modifier" />
+                        <span asp-validation-for="NouveauMotDePasse" class="text-danger small mt-1 d-block"></span>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label asp-for="ConfirmerNouveauMotDePasse" class="form-label fw-semibold text-slate-700">Confirmation du mot de passe</label>
+                        <input asp-for="ConfirmerNouveauMotDePasse" class="form-control" type="password" placeholder="Re-saisissez le nouveau mot de passe" />
+                        <span asp-validation-for="ConfirmerNouveauMotDePasse" class="text-danger small mt-1 d-block"></span>
+                    </div>
+
+                    <div class="col-12 border-top pt-4 mt-4 d-flex gap-2 justify-content-end">
+                        <a class="btn btn-outline-secondary px-4" asp-action="Details" asp-route-id="@Model.Id">Annuler</a>
+                        <button class="btn btn-primary px-4 d-inline-flex align-items-center shadow-sm" type="submit">
+                            <i class="bi bi-check-lg me-1.5"></i> Enregistrer les modifications
+                        </button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>

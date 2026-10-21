@@ -1,0 +1,44 @@
+﻿@model ProjetLibrairie.Models.ErrorViewModel
+@inject IWebHostEnvironment Env
+
+@{
+    ViewData["Title"] = "Erreur";
+    var message = ViewBag.ExceptionMessage as string;
+    var path = ViewBag.Path as string;
+}
+
+<h1 class="text-danger">Une erreur s'est produite</h1>
+<p class="text-muted">Nous n'avons pas pu traiter votre demande.</p>
+
+@if (Model?.ShowRequestId == true)
+{
+    <p><strong>Request ID:</strong> <code>@Model.RequestId</code></p>
+}
+
+@if (Env.IsDevelopment())
+{
+    <hr />
+    <h4>Mode développement</h4>
+
+    @if (!string.IsNullOrWhiteSpace(path))
+    {
+        <p><strong>Chemin :</strong> <code>@path</code></p>
+    }
+
+    @if (!string.IsNullOrWhiteSpace(message))
+    {
+        <p><strong>Message :</strong> <code>@message</code></p>
+    }
+
+    <div class="alert alert-warning">
+        Regarde aussi la fenêtre Output / Console de Visual Studio pour la stack trace complète.
+    </div>
+}
+else
+{
+    <div class="alert alert-secondary">
+        Active l'environnement <strong>Development</strong> en local pour voir plus de détails.
+    </div>
+}
+
+<a class="btn btn-outline-secondary" asp-controller="Compte" asp-action="Connexion">Retour</a>

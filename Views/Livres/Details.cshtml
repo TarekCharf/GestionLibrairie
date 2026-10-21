@@ -1,0 +1,123 @@
+﻿@model ProjetLibrairie.Models.Livre
+@using ProjetLibrairie.Helpers
+
+@{
+    ViewData["Title"] = "Détails livre";
+    bool isAdh = AuthSession.EstAdherent(Context);
+    bool isAdmin = AuthSession.EstAdmin(Context);
+}
+
+<div class="d-flex align-items-end justify-content-between flex-wrap gap-2 mb-3">
+    <div>
+        <h2 class="mb-0">Détails livre</h2>
+        <div class="text-muted">Livre #@Model.Id</div>
+    </div>
+
+    <div class="d-flex gap-2">
+        <a class="btn btn-outline-secondary" asp-action="Index">
+            <i class="bi bi-arrow-left"></i> Retour
+        </a>
+
+        @if (isAdmin)
+        {
+            <a class="btn btn-outline-warning" asp-action="Modifier" asp-route-id="@Model.Id">
+                <i class="bi bi-pencil-square"></i> Modifier
+            </a>
+        }
+    </div>
+</div>
+
+<div class="row g-3">
+    <div class="col-lg-7">
+        <div class="card shadow-sm">
+            <div class="card-header bg-white fw-semibold">
+                Informations livre
+            </div>
+            <div class="card-body">
+                <dl class="row mb-0">
+                    <dt class="col-sm-4 text-muted">Titre</dt>
+                    <dd class="col-sm-8 fw-semibold">@Model.Titre</dd>
+
+                    <dt class="col-sm-4 text-muted">Auteur</dt>
+                    <dd class="col-sm-8">@Model.Auteur</dd>
+
+                    <dt class="col-sm-4 text-muted">Catégorie</dt>
+                    <dd class="col-sm-8">@(Model.Categorie?.Nom ?? "-")</dd>
+
+                    <dt class="col-sm-4 text-muted">Disponibilité</dt>
+                    <dd class="col-sm-8">
+                        @if (Model.Disponible)
+                        {
+                            <span class="badge text-bg-success">Disponible</span>
+                        }
+                        else
+                        {
+                            <span class="badge text-bg-secondary">Emprunté</span>
+                        }
+                    </dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-5">
+        <div class="card shadow-sm">
+            <div class="card-header bg-white fw-semibold">
+                Actions
+            </div>
+            <div class="card-body">
+                @if (isAdh && Model.Disponible)
+                {
+                    <a class="btn btn-primary w-100"
+                       asp-controller="Emprunts"
+                       asp-action="Creer"
+                       asp-route-livreId="@Model.Id">
+                        <i class="bi bi-journal-plus me-1"></i> Emprunter (2 semaines)
+                    </a>
+                    <div class="text-muted small mt-2">
+                        Date limite calculée automatiquement (+14 jours).
+                    </div>
+                }
+                else if (!Model.Disponible)
+                {
+                    <div class="alert alert-secondary mb-0">
+                        Ce livre est actuellement emprunté.
+                    </div>
+                }
+                else
+                {
+                    <div class="alert alert-info mb-0">
+                        Connectez-vous en tant qu’adhérent pour emprunter.
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+    <section class="mt-5 pt-4 border-top">
+        @await Html.PartialAsync("~/Views/Ratings/IndexLivre.cshtml", Model.Ratings)
+
+        @if (AuthSession.EstAdherent(Context))
+        {
+            <div class="text-center mt-3">
+                <a asp-controller="Ratings" asp-action="Creer" asp-route-livreId="@Model.Id"
+                   class="btn btn-sm btn-outline-warning rounded-pill px-4 fw-semibold">
+                    <i class="bi bi-star me-2"></i>Noter ce livre
+                </a>
+            </div>
+        }
+    </section>
+    <section class="mt-5 pt-5 border-top">
+        @await Html.PartialAsync("~/Views/Commentaires/IndexLivre.cshtml", Model.Commentaires)
+
+        @if (AuthSession.EstAdherent(Context))
+        {
+            <div class="text-center mt-4">
+                <a asp-controller="Commentaires" asp-action="Creer" asp-route-livreId="@Model.Id"
+                   class="btn btn-outline-primary rounded-pill px-4">
+                    <i class="bi bi-pencil-square me-2"></i>Écrire un commentaire
+                </a>
+            </div>
+        }
+    </section>
+
+</div>

@@ -1,0 +1,28 @@
+﻿@model ProjetLibrairie.Models.Rating
+
+@{
+    ViewData["Title"] = "Supprimer la note";
+}
+
+<div class="row justify-content-center">
+    <div class="col-12 col-md-6 col-lg-5">
+        <div class="card border-0 shadow-lg text-center mt-5 rounded-4">
+            <div class="card-body p-4">
+                <div class="bg-danger bg-opacity-10 text-danger rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px;">
+                    <i class="bi bi-exclamation-octagon fs-3"></i>
+                </div>
+
+                <h4 class="fw-bold text-slate-900 mb-2">Retirer cette note ?</h4>
+                <p class="text-muted small px-3">Cette action supprimera de manière irréversible la note de <strong>@Model.Valeur/5</strong> attribuée à l'ouvrage.</p>
+
+                <form asp-action="Supprimer">
+                    <input type="hidden" asp-for="Id" />
+                    <div class="d-grid gap-2 mt-4">
+                        <button type="submit" class="btn btn-danger btn-lg rounded-3 fs-6 py-2.5">Confirmer la suppression</button>
+                        <a href="javascript:history.back()" class="btn btn-link text-decoration-none text-muted small">Conserver la note</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

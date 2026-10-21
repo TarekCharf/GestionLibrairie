@@ -1,0 +1,50 @@
+﻿@model IEnumerable<ProjetLibrairie.Models.Commentaire>
+
+@{
+    ViewData["Title"] = "Modération des commentaires";
+}
+
+<div class="d-flex align-items-center justify-content-between mb-4">
+    <div>
+        <h2 class="fw-bold text-slate-900 mb-1">Modération</h2>
+        <div class="text-muted">Gérez et surveillez les interactions sur le catalogue.</div>
+    </div>
+    <span class="badge bg-primary bg-opacity-10 text-primary px-3 py-2 rounded-pill fw-bold">
+        @Model.Count() total
+    </span>
+</div>
+
+<div class="card border-0 shadow-sm">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="bg-light">
+                    <tr>
+                        <th class="ps-4">Adhérent</th>
+                        <th>Livre</th>
+                        <th>Commentaire</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td class="ps-4">
+                                <div class="fw-bold">@item.Adherent?.Prenom @item.Adherent?.Nom</div>
+                                <div class="small text-muted">@item.Adherent?.Email</div>
+                            </td>
+                            <td>
+                                <span class="badge bg-light text-dark border">@item.Livre?.Titre</span>
+                            </td>
+                            <td>
+                                <div class="text-truncate" style="max-width: 250px;">@item.Texte</div>
+                            </td>
+                            <td class="small text-muted">@item.DateCreation.ToString("d")</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,90 @@
+﻿@model ProjetLibrairie.Models.Adherent
+@using ProjetLibrairie.Helpers
+
+@{
+    bool isAdh = AuthSession.EstAdherent(Context);
+    int? currentId = AuthSession.AdherentId(Context);
+    bool canEdit = isAdh && currentId.HasValue && currentId.Value == Model.Id;
+    ViewData["Title"] = "Profil adhérent";
+}
+
+<div class="d-flex align-items-center justify-content-between flex-wrap gap-3 mb-4">
+    <div class="d-flex align-items-center gap-3">
+        <div class="bg-primary bg-opacity-10 text-primary rounded-3 p-2.5 d-flex align-items-center justify-content-center">
+            <i class="bi bi-person-card-heading fs-3"></i>
+        </div>
+        <div>
+            <h2 class="fw-bold text-slate-900 mb-0">Fiche Profil</h2>
+            <div class="text-muted">Identifiant unique : <span class="badge bg-light text-dark border">#@Model.Id</span></div>
+        </div>
+    </div>
+
+    <div class="d-flex gap-2">
+        @if (!isAdh)
+        {
+            <a class="btn btn-outline-secondary d-inline-flex align-items-center" asp-action="Index">
+                <i class="bi bi-arrow-left me-2"></i> Retour à la liste
+            </a>
+            <a class="btn btn-outline-danger d-inline-flex align-items-center" asp-action="Bannir" asp-route-id="@Model.Id">
+                <i class="bi bi-slash-circle me-2"></i> Statut d'accès
+            </a>
+        }
+        @if (canEdit)
+        {
+            <a class="btn btn-primary d-inline-flex align-items-center shadow-sm" asp-action="Modifier" asp-route-id="@Model.Id">
+                <i class="bi bi-pencil-square me-2"></i> Mettre à jour mon profil
+            </a>
+        }
+    </div>
+</div>
+
+<div class="row g-4">
+    <div class="col-12 col-lg-8 mx-auto">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header border-0 bg-transparent pt-4 px-4 pb-2">
+                <h5 class="fw-bold text-slate-900 mb-0">Informations personnelles</h5>
+            </div>
+            <div class="card-body px-4 pb-4">
+                <div class="row g-3">
+                    <div class="col-sm-6 bg-light p-3 rounded-3 border-start border-primary border-3">
+                        <span class="text-muted small d-block mb-1 text-uppercase fw-semibold tracking-wider" style="font-size: 0.75rem;">Nom de famille</span>
+                        <span class="h6 fw-bold text-slate-900 mb-0">@Model.Nom</span>
+                    </div>
+
+                    <div class="col-sm-6 bg-light p-3 rounded-3 border-start border-primary border-3">
+                        <span class="text-muted small d-block mb-1 text-uppercase fw-semibold tracking-wider" style="font-size: 0.75rem;">Prénom</span>
+                        <span class="h6 fw-bold text-slate-900 mb-0">@Model.Prenom</span>
+                    </div>
+
+                    <div class="col-12 bg-light p-3 rounded-3">
+                        <span class="text-muted small d-block mb-1 text-uppercase fw-semibold tracking-wider" style="font-size: 0.75rem;">Adresse de messagerie électronique</span>
+                        <a href="mailto:@Model.Email" class="h6 fw-semibold text-primary text-decoration-none d-inline-flex align-items-center gap-1 mb-0">
+                            <i class="bi bi-envelope"></i> @Model.Email
+                        </a>
+                    </div>
+
+                    <div class="col-sm-6 bg-light p-3 rounded-3">
+                        <span class="text-muted small d-block mb-1 text-uppercase fw-semibold tracking-wider" style="font-size: 0.75rem;">Nom d'utilisateur (Login)</span>
+                        <code class="bg-white text-dark px-2 py-0.5 rounded border small fw-bold">@Model.Login</code>
+                    </div>
+
+                    <div class="col-sm-6 bg-light p-3 rounded-3">
+                        <span class="text-muted small d-block mb-1 text-uppercase fw-semibold tracking-wider" style="font-size: 0.75rem;">Statut de sécurité</span>
+                        @if (Model.EstBanni)
+                        {
+                            <span class="text-danger fw-bold d-inline-flex align-items-center small">
+                                <i class="bi bi-exclamation-octagon-fill me-1"></i> Compte restreint / Suspendu
+                            </span>
+                        }
+                        else
+                        {
+                            <span class="text-success fw-bold d-inline-flex align-items-center small">
+                                <i class="bi bi-shield-check me-1"></i> Autorisé (Accès complet)
+                            </span>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

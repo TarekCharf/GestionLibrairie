@@ -1,0 +1,41 @@
+﻿@model ProjetLibrairie.Models.Commentaire
+
+@{
+    ViewData["Title"] = "Ajouter un commentaire";
+}
+
+<div class="d-flex align-items-center justify-content-between mb-4">
+    <div>
+        <h2 class="fw-bold text-slate-900 mb-1">Votre avis</h2>
+        <div class="text-muted">Partagez votre expérience de lecture avec la communauté.</div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12 col-lg-8 mx-auto">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body p-4 p-sm-5">
+                <form asp-action="Creer" method="post">
+                    @Html.AntiForgeryToken()
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger border-0 small"></div>
+
+                    <input type="hidden" asp-for="LivreId" />
+
+                    <div class="mb-4">
+                        <label asp-for="Texte" class="form-label fw-bold text-slate-700">Commentaire</label>
+                        <textarea asp-for="Texte" class="form-control" rows="5"
+                                  placeholder="Qu'avez-vous pensé de ce livre ?"></textarea>
+                        <span asp-validation-for="Texte" class="text-danger small"></span>
+                    </div>
+
+                    <div class="d-flex gap-2 justify-content-end border-top pt-4">
+                        <a href="javascript:history.back()" class="btn btn-outline-secondary px-4">Annuler</a>
+                        <button type="submit" class="btn btn-primary px-4 shadow-sm">
+                            <i class="bi bi-send me-2"></i>Publier le commentaire
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

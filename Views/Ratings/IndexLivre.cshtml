@@ -1,0 +1,112 @@
+﻿@model IEnumerable<ProjetLibrairie.Models.Rating>
+@using ProjetLibrairie.Helpers
+
+@{
+    Layout = null; // Permet de l'injecter facilement en tant que vue partielle
+    var currentUserId = AuthSession.AdherentId(Context);
+    var isAdmin = AuthSession.EstAdmin(Context);
+
+    // Calcul de la moyenne
+    float moyenne = Model.Any() ? Model.Average(r => r.Valeur) : 0;
+}
+
+<div class="rating-feed my-4">
+    <div class="row align-items-center mb-4 g-3">
+        <div class="col-sm-6">
+            <h5 class="fw-bold text-slate-900 mb-1">
+                <i class="bi bi-star me-2 text-warning"></i>Avis et Notes
+            </h5>
+            <p class="text-muted small mb-0">Découvrez ce que les lecteurs en pensent (@Model.Count() évaluation(s))</p>
+        </div>
+        @if (Model.Any())
+        {
+            <div class="col-sm-6 text-sm-end">
+                <div class="d-inline-flex align-items-center bg-light border px-3 py-2 rounded-4">
+                    <span class="fs-4 fw-black text-dark me-2">@moyenne.ToString("0.0")</span>
+                    <div class="text-warning me-2" style="font-size: 0.85rem;">
+                        @for (int i = 1; i <= 5; i++)
+                        {
+                            <i class="bi @(i <= Math.Round(moyenne) ? "bi-star-fill" : "bi-star")"></i>
+                        }
+                    </div>
+                    <span class="text-muted small">/ 5</span>
+                </div>
+            </div>
+        }
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="text-center py-5 bg-light rounded-4 border border-dashed">
+            <i class="bi bi-star-half fs-1 text-muted opacity-40"></i>
+            <p class="text-muted mt-2 mb-0">Aucune note attribuée à ce livre pour l'instant.</p>
+        </div>
+    }
+    else
+    {
+        <div class="vstack gap-3">
+            @foreach (var item in Model)
+            {
+                <div class="card border-0 shadow-sm rounded-4 bg-white">
+                    <div class="card-body p-3">
+                        <div class="d-flex align-items-start justify-content-between">
+                            <div class="d-flex gap-3 align-items-center">
+                                <div class="flex-shrink-0">
+                                    <div class="bg-warning bg-opacity-10 text-warning rounded-circle d-flex align-items-center justify-content-center fw-bold"
+                                         style="width: 40px; height: 40px; font-size: 0.85rem;">
+                                        @(item.Adherent?.Prenom?.Substring(0, 1).ToUpper())@(item.Adherent?.Nom?.Substring(0, 1).ToUpper())
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="mb-0 fw-bold text-slate-900 small">@item.Adherent?.Prenom @item.Adherent?.Nom</div>
+                                    <div class="text-warning" style="font-size: 0.75rem;">
+                                        @for (int i = 1; i <= 5; i++)
+                                        {
+                                            <i class="bi @(i <= item.Valeur ? "bi-star-fill" : "bi-star")"></i>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="text-end">
+                                <small class="text-muted d-block" style="font-size: 0.75rem;">
+                                    <i class="bi bi-calendar3 me-1"></i>@item.DateNotation.ToString("d")
+                                </small>
+
+                                @if (isAdmin || (currentUserId.HasValue && currentUserId == item.AdherentId))
+                                {
+                                    <div class="mt-1">
+                                        @if (currentUserId == item.AdherentId)
+                                        {
+                                            <a asp-controller="Ratings" asp-action="Modifier" asp-route-id="@item.Id" class="text-muted text-decoration-none small me-2 hover-warning">
+                                                <i class="bi bi-pencil small"></i>
+                                            </a>
+                                            <a asp-controller="Ratings" asp-action="Supprimer" asp-route-id="@item.Id" class="text-danger text-decoration-none small hover-opacity">
+                                                <i class="bi bi-trash small"></i>
+                                            </a>
+                                        }
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>
+
+<style>
+    .rating-feed {
+        max-width: 800px;
+        margin: 0 auto;
+    }
+
+    .hover-warning:hover {
+        color: #ffc107 !important;
+    }
+
+    .hover-opacity:hover {
+        opacity: 0.7;
+    }
+</style>

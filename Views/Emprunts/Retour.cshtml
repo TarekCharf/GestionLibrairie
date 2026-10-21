@@ -1,0 +1,78 @@
+﻿@model ProjetLibrairie.Models.Emprunt
+
+@{
+    ViewData["Title"] = "Retour de livre";
+    var titreLivre = Model.Livre?.Titre ?? "(Livre introuvable)";
+    var adherentNom = Model.Adherent == null ? "-" : $"{Model.Adherent.Nom} {Model.Adherent.Prenom}";
+    bool rendu = Model.DateRetour.HasValue;
+}
+
+<div class="d-flex align-items-center justify-content-between flex-wrap gap-3 mb-4">
+    <div>
+        <h2 class="fw-bold text-slate-900 mb-1">Traitement de retour</h2>
+        <div class="text-muted">Clôturer administrativement un cycle de prêt.</div>
+    </div>
+    <a class="btn btn-outline-secondary d-inline-flex align-items-center" asp-action="Index">
+        <i class="bi bi-arrow-left me-2"></i> Annuler l'opération
+    </a>
+</div>
+
+<div class="row">
+    <div class="col-12 col-md-8 col-lg-6 mx-auto">
+        <div class="card border-0 shadow-sm @(rendu ? "border-top border-info border-4" : "border-top border-warning border-4")">
+            <div class="card-body p-4 p-sm-5">
+
+                @if (rendu)
+                {
+                    <div class="text-center mb-4">
+                        <div class="text-info bg-info bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 56px; height: 56px;">
+                            <i class="bi bi-info-circle fs-2"></i>
+                        </div>
+                        <h5 class="fw-bold text-slate-900">Traitement déjà finalisé</h5>
+                        <p class="text-muted small">Cet exemplaire a déjà été consigné et réintroduit dans le système le <strong>@Model.DateRetour?.ToString("dd MMMM yyyy")</strong>.</p>
+                    </div>
+                }
+                else
+                {
+                    <div class="text-center mb-4">
+                        <div class="text-warning bg-warning bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 56px; height: 56px;">
+                            <i class="bi bi-arrow-return-left fs-2"></i>
+                        </div>
+                        <h5 class="fw-bold text-slate-900">Enregistrer la dépose du livre ?</h5>
+                        <p class="text-muted small">Assurez-vous que l'état matériel de l'ouvrage est conforme aux règles d'archivage avant validation.</p>
+                    </div>
+                }
+
+                <div class="bg-light p-3.5 rounded-3 mb-4 border">
+                    <dl class="row mb-0 g-3 small">
+                        <dt class="col-sm-4 text-muted text-uppercase tracking-wider" style="font-size: 0.7rem;">Nom de l'œuvre</dt>
+                        <dd class="col-sm-8 fw-bold text-slate-900 mb-0">@titreLivre</dd>
+
+                        <dt class="col-sm-4 text-muted text-uppercase tracking-wider" style="font-size: 0.7rem;">Emprunteur</dt>
+                        <dd class="col-sm-8 fw-semibold text-slate-700 mb-0">@adherentNom</dd>
+
+                        <dt class="col-sm-4 text-muted text-uppercase tracking-wider" style="font-size: 0.7rem;">Sortie initiale</dt>
+                        <dd class="col-sm-8 font-monospace text-secondary mb-0">@Model.DateEmprunt.ToString("dd/MM/yyyy")</dd>
+
+                        <dt class="col-sm-4 text-muted text-uppercase tracking-wider" style="font-size: 0.7rem;">Date limite légale</dt>
+                        <dd class="col-sm-8 font-monospace text-secondary mb-0">@Model.DateEmprunt.AddDays(14).ToString("dd/MM/yyyy")</dd>
+                    </dl>
+                </div>
+
+                <form asp-action="Retour" method="post" class="d-flex gap-2 justify-content-center">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" asp-for="Id" />
+
+                    <a class="btn btn-outline-secondary px-4" asp-action="Index">Retour à la liste</a>
+                    @if (!rendu)
+                    {
+                        <button type="submit" class="btn btn-warning px-4 text-dark fw-semibold d-inline-flex align-items-center shadow-sm">
+                            <i class="bi bi-check2-square me-1.5"></i> Valider la réintégration
+                        </button>
+                    }
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,100 @@
+﻿@model IEnumerable<ProjetLibrairie.Models.Adherent>
+
+@{
+    ViewData["Title"] = "Gestion des adhérents";
+}
+
+<div class="d-flex align-items-center justify-content-between flex-wrap gap-3 mb-4">
+    <div>
+        <h2 class="fw-bold text-slate-900 mb-1">Gestion des adhérents</h2>
+        <div class="text-muted">Consultez, modifiez et gérez les accès des membres de la bibliothèque.</div>
+    </div>
+    <div class="badge bg-primary bg-opacity-10 text-primary px-3 py-2 rounded-pill fw-semibold">
+        <i class="bi bi-people-fill me-1"></i> @(Model?.Count() ?? 0) abonnés
+    </div>
+</div>
+
+<div class="card border-0 shadow-sm">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead>
+                    <tr>
+                        <th style="width: 25%;">Nom & Prénom</th>
+                        <th style="width: 30%;">Adresse Email</th>
+                        <th style="width: 20%;">Identifiant (Login)</th>
+                        <th class="text-center" style="width: 10%;">Statut</th>
+                        <th class="text-end" style="width: 15%;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model == null || !Model.Any())
+                    {
+                        <tr>
+                            <td colspan="5" class="text-muted py-5 text-center">
+                                <div class="mb-2"><i class="bi bi-person-x fs-1 opacity-50"></i></div>
+                                Aucun adhérent n'est actuellement inscrit dans la base de données.
+                            </td>
+                        </tr>
+                    }
+                    else
+                    {
+                        foreach (var a in Model)
+                        {
+                            <tr>
+                                <td>
+                                    <div class="d-flex align-items-center gap-2">
+                                        <div class="bg-light text-secondary rounded-circle d-flex align-items-center justify-content-center fw-bold" style="width: 36px; height: 36px; font-size: 0.85rem;">
+                                            @(a.Nom.Substring(0, 1).ToUpper())(@a.Prenom.Substring(0, 1).ToUpper())
+                                        </div>
+                                        <div>
+                                            <div class="fw-bold text-slate-900">@a.Nom @a.Prenom</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <a href="mailto:@a.Email" class="text-decoration-none text-primary d-inline-flex align-items-center gap-1">
+                                        <i class="bi bi-envelope small opacity-75"></i> @a.Email
+                                    </a>
+                                </td>
+                                <td>
+                                    <code class="bg-light text-dark px-2 py-1 rounded small border fw-semibold">@a.Login</code>
+                                </td>
+                                <td class="text-center">
+                                    @if (a.EstBanni)
+                                    {
+                                        <span class="badge bg-danger bg-opacity-10 text-danger border border-danger border-opacity-20 px-2.5 py-1 rounded-pill small fw-semibold">
+                                            <i class="bi bi-slash-circle me-1"></i> Suspendu
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-20 px-2.5 py-1 rounded-pill small fw-semibold">
+                                            <i class="bi bi-check2-circle me-1"></i> Actif
+                                        </span>
+                                    }
+                                </td>
+                                <td class="text-end">
+                                    <div class="d-inline-flex gap-1">
+                                        <a class="btn btn-sm btn-outline-secondary d-inline-flex align-items-center"
+                                           asp-action="Details"
+                                           asp-route-id="@a.Id"
+                                           title="Voir la fiche complète">
+                                            <i class="bi bi-eye me-1"></i> Détails
+                                        </a>
+                                        <a class="btn btn-sm btn-outline-danger d-inline-flex align-items-center"
+                                           asp-action="Bannir"
+                                           asp-route-id="@a.Id"
+                                           title="Gérer les restrictions">
+                                            <i class="bi bi-slash-circle me-1"></i> Restrictions
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

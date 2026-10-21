@@ -1,0 +1,99 @@
+﻿@model ProjetLibrairie.Models.Adherent
+
+@{
+    ViewData["Title"] = "Bannir un adhérent";
+    DateTime dateFin = ViewBag.DateFin is DateTime d ? d : DateTime.Now.AddMonths(1);
+    bool estBanni = Model.EstBanni;
+}
+
+<div class="d-flex align-items-center justify-content-between flex-wrap gap-3 mb-4">
+    <div>
+        <h2 class="fw-bold text-slate-900 mb-1">Statut d'accès & Restrictions</h2>
+        <div class="text-muted">Modération d'accès aux services pour l'adhérent <span class="badge bg-light text-dark border">#@Model.Id</span></div>
+    </div>
+
+    <a class="btn btn-outline-secondary d-inline-flex align-items-center" asp-action="Index">
+        <i class="bi bi-arrow-left me-2"></i> Retour à la liste
+    </a>
+</div>
+
+<div class="row g-4">
+    <div class="col-12 col-lg-6">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-header border-0 bg-transparent pt-4 px-4">
+                <h5 class="fw-bold text-slate-900 mb-0"><i class="bi bi-person-vcard text-muted me-2"></i>Informations du membre</h5>
+            </div>
+            <div class="card-body px-4 pb-4">
+                <div class="bg-light p-3 rounded-3 mb-3">
+                    <span class="text-muted small d-block mb-1 text-uppercase fw-semibold tracking-wider" style="font-size: 0.70rem;">Nom complet</span>
+                    <span class="fw-bold text-slate-900">@Model.Nom @Model.Prenom</span>
+                </div>
+
+                <div class="bg-light p-3 rounded-3 mb-3">
+                    <span class="text-muted small d-block mb-1 text-uppercase fw-semibold tracking-wider" style="font-size: 0.70rem;">Adresse Email</span>
+                    <a href="mailto:@Model.Email" class="text-decoration-none fw-medium">@Model.Email</a>
+                </div>
+
+                <div class="bg-light p-3 rounded-3">
+                    <span class="text-muted small d-block mb-1 text-uppercase fw-semibold tracking-wider" style="font-size: 0.70rem;">Identifiant système</span>
+                    <code class="bg-white text-dark px-2 py-0.5 rounded border small fw-bold">@Model.Login</code>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12 col-lg-6">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-header border-0 bg-transparent pt-4 px-4">
+                <h5 class="fw-bold text-slate-900 mb-0"><i class="bi bi-shield-slash text-muted me-2"></i>Actions de sécurité</h5>
+            </div>
+            <div class="card-body px-4 pb-4 d-flex flex-column justify-content-between gap-4">
+
+                <div>
+                    <div class="alert alert-warning border-0 shadow-sm d-flex align-items-start gap-2.5 p-3 mb-4" role="alert">
+                        <i class="bi bi-exclamation-triangle-fill fs-5 text-warning mt-0.5"></i>
+                        <div class="small">
+                            Le bannissement temporaire désactive immédiatement la possibilité pour ce membre de se connecter et de réserver des ouvrages pendant <strong>1 mois complet</strong>.
+                        </div>
+                    </div>
+
+                    <div class="bg-light p-3 rounded-3 mb-3">
+                        <span class="text-muted small d-block mb-1 text-uppercase fw-semibold tracking-wider" style="font-size: 0.70rem;">Date de fin automatique prévisionnelle</span>
+                        <div class="h5 mb-0 text-slate-900 font-monospace fw-bold"><i class="bi bi-calendar-event text-muted me-2"></i>@dateFin.ToString("dd MMMM yyyy")</div>
+                    </div>
+                </div>
+
+                <div class="border-top pt-3">
+                    <div class="d-flex flex-wrap gap-2">
+                        <form asp-action="Bannir" method="post" class="d-inline m-0">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" asp-for="Id" />
+
+                            <button type="submit" class="btn btn-danger d-inline-flex align-items-center shadow-sm">
+                                <i class="bi bi-slash-circle me-1.5"></i> Appliquer l'exclusion (1 mois)
+                            </button>
+                        </form>
+
+                        <a class="btn btn-outline-secondary" asp-action="Index">Annuler</a>
+                    </div>
+
+                    @if (estBanni)
+                    {
+                        <div class="mt-4 pt-3 border-top border-dashed">
+                            <div class="text-muted small mb-2">Cet utilisateur subit actuellement une restriction. Vous pouvez lever la sanction :</div>
+                            <form asp-action="Debannir" method="post" class="m-0">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" asp-for="Id" />
+
+                                <button type="submit" class="btn btn-outline-success btn-sm d-inline-flex align-items-center">
+                                    <i class="bi bi-unlock-fill me-1.5"></i> Rétablir l'accès immédiatement
+                                </button>
+                            </form>
+                        </div>
+                    }
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

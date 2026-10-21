@@ -1,0 +1,82 @@
+﻿@model IEnumerable<ProjetLibrairie.Models.Commentaire>
+@using ProjetLibrairie.Helpers
+
+@{
+    Layout = null; // Important pour pouvoir l'injecter en tant que vue partielle
+    var currentUserId = AuthSession.AdherentId(Context);
+    var isAdmin = AuthSession.EstAdmin(Context);
+}
+
+<div class="comment-feed">
+    <div class="d-flex align-items-center justify-content-between mb-4">
+        <h5 class="fw-bold text-slate-900 mb-0">
+            <i class="bi bi-chat-left-text me-2 text-primary"></i>
+            Commentaires (@Model.Count())
+        </h5>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="text-center py-5 bg-light rounded-4 border border-dashed">
+            <i class="bi bi-chat-dots fs-1 text-muted opacity-50"></i>
+            <p class="text-muted mt-2">Aucun commentaire pour le moment. Soyez le premier à donner votre avis !</p>
+        </div>
+    }
+    else
+    {
+        <div class="vstack gap-4">
+            @foreach (var item in Model)
+            {
+                <div class="d-flex gap-3">
+                    <div class="flex-shrink-0">
+                        <div class="bg-primary bg-opacity-10 text-primary rounded-circle d-flex align-items-center justify-content-center fw-bold"
+                             style="width: 42px; height: 42px; font-size: 0.9rem;">
+                            @(item.Adherent?.Prenom?.Substring(0, 1).ToUpper())@(item.Adherent?.Nom?.Substring(0, 1).ToUpper())
+                        </div>
+                    </div>
+
+                    <div class="flex-grow-1">
+                        <div class="card border-0 shadow-sm rounded-4 bg-white">
+                            <div class="card-body p-3">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <h6 class="mb-0 fw-bold text-slate-900">@item.Adherent?.Prenom @item.Adherent?.Nom</h6>
+                                    <small class="text-muted" style="font-size: 0.75rem;">
+                                        <i class="bi bi-clock me-1"></i>
+                                        @item.DateCreation.ToString("g")
+                                        @if (item.DateModification.HasValue)
+                                        {
+                                            <span class="ms-1 font-italic">(modifié)</span>
+                                        }
+                                    </small>
+                                </div>
+                                <p class="text-slate-700 mb-0" style="white-space: pre-line; font-size: 0.95rem;">@item.Texte</p>
+                            </div>
+                        </div>
+
+                        @if (isAdmin || (currentUserId.HasValue && currentUserId == item.AdherentId))
+                        {
+                            <div class="d-flex gap-3 mt-1 ms-2">
+                                @if (currentUserId == item.AdherentId)
+                                {
+                                    <a asp-controller="Commentaires" asp-action="Modifier" asp-route-id="@item.Id"
+                                    class="text-decoration-none text-muted small hover-primary">
+                                        <i class="bi bi-pencil me-1"></i>Modifier
+                                    </a>
+                                    <a asp-controller="Commentaires" asp-action="Supprimer" asp-route-id="@item.Id"
+                                    class="text-decoration-none text-danger small opacity-75 hover-opacity-100">
+                                        <i class="bi bi-trash me-1"></i>Supprimer
+                                    </a>
+                                }
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>
+
+<style>
+    .hover-primary:hover { color: var(--primary) !important; }
+    .comment-feed { max-width: 800px; margin: 0 auto; }
+</style>

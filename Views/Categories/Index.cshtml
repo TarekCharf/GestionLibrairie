@@ -1,0 +1,86 @@
+﻿@model IEnumerable<ProjetLibrairie.Models.Categorie>
+
+@{
+    ViewData["Title"] = "Gestion des catégories";
+}
+
+<div class="d-flex align-items-center justify-content-between flex-wrap gap-3 mb-4">
+    <div>
+        <h2 class="fw-bold text-slate-900 mb-1">Gestion des catégories</h2>
+        <div class="text-muted">Organisez les thématiques et rayons de la bibliothèque universitaire.</div>
+    </div>
+    <div class="d-flex align-items-center gap-3">
+        <div class="badge bg-primary bg-opacity-10 text-primary px-3 py-2 rounded-pill fw-semibold">
+            <i class="bi bi-tags-fill me-1"></i> @(Model?.Count() ?? 0) thématiques
+        </div>
+        <a class="btn btn-primary d-inline-flex align-items-center shadow-sm" asp-action="Creer">
+            <i class="bi bi-plus-lg me-1.5"></i> Ajouter une catégorie
+        </a>
+    </div>
+</div>
+
+<div class="card border-0 shadow-sm">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead>
+                    <tr>
+                        <th style="width: 15%;">ID</th>
+                        <th style="width: 60%;">Nom de la catégorie</th>
+                        <th class="text-end" style="width: 25%;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model == null || !Model.Any())
+                    {
+                        <tr>
+                            <td colspan="3" class="text-muted py-5 text-center">
+                                <div class="mb-2"><i class="bi bi-tag fs-1 opacity-50"></i></div>
+                                Aucune catégorie n'est actuellement configurée.
+                            </td>
+                        </tr>
+                    }
+                    else
+                    {
+                        foreach (var c in Model)
+                        {
+                            <tr>
+                                <td>
+                                    <span class="text-muted font-monospace small">#@c.Id</span>
+                                </td>
+                                <td>
+                                    <div class="d-flex align-items-center gap-2.5">
+                                        <div class="bg-light text-primary rounded p-2 d-flex align-items-center justify-content-center" style="width: 34px; height: 34px;">
+                                            <i class="bi bi-bookmark-fill small"></i>
+                                        </div>
+                                        <span class="fw-bold text-slate-900 fs-6">@c.Nom</span>
+                                    </div>
+                                </td>
+                                <td class="text-end">
+                                    <div class="d-inline-flex gap-1">
+                                        <a class="btn btn-sm btn-outline-secondary d-inline-flex align-items-center"
+                                           asp-action="Details"
+                                           asp-route-id="@c.Id"
+                                           title="Voir les livres liés">
+                                            <i class="bi bi-eye me-1"></i> Voir
+                                        </a>
+                                        <a class="btn btn-sm btn-outline-primary d-inline-flex align-items-center"
+                                           asp-action="Modifier"
+                                           asp-route-id="@c.Id">
+                                            <i class="bi bi-pencil me-1"></i> Modifier
+                                        </a>
+                                        <a class="btn btn-sm btn-outline-danger d-inline-flex align-items-center"
+                                           asp-action="Supprimer"
+                                           asp-route-id="@c.Id">
+                                            <i class="bi bi-trash me-1"></i> Supprimer
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

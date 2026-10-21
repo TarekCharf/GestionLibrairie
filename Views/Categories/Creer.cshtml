@@ -1,0 +1,58 @@
+﻿@model ProjetLibrairie.Models.Categorie
+
+@{
+    ViewData["Title"] = "Créer une catégorie";
+}
+
+<div class="d-flex align-items-center justify-content-between flex-wrap gap-3 mb-4">
+    <div>
+        <h2 class="fw-bold text-slate-900 mb-1">Créer une catégorie</h2>
+        <div class="text-muted">Ajoutez une nouvelle classification pour trier les futurs ouvrages.</div>
+    </div>
+    <a class="btn btn-outline-secondary d-inline-flex align-items-center" asp-action="Index">
+        <i class="bi bi-arrow-left me-2"></i> Annuler et retourner
+    </a>
+</div>
+
+<div class="row">
+    <div class="col-12 col-md-8 col-lg-6 mx-auto">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body p-4 p-sm-5">
+
+                <form asp-action="Creer" method="post" class="row g-4">
+                    @Html.AntiForgeryToken()
+
+                    @if (!ViewData.ModelState.IsValid)
+                    {
+                        <div class="col-12">
+                            <div class="alert alert-danger border-0 shadow-sm d-flex align-items-start gap-2 mb-0" role="alert">
+                                <i class="bi bi-exclamation-triangle-fill fs-5 mt-0.5"></i>
+                                <div>
+                                    <h6 class="fw-bold mb-1">Erreur de saisie :</h6>
+                                    <div asp-validation-summary="All" class="small text-danger"></div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+
+                    <div class="col-12">
+                        <label asp-for="Nom" class="form-label fw-semibold text-slate-700">Libellé de la catégorie</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light text-muted"><i class="bi bi-tag-fill"></i></span>
+                            <input asp-for="Nom" class="form-control form-control-lg" placeholder="Ex: Sciences de l'ingénieur, Littérature..." />
+                        </div>
+                        <span asp-validation-for="Nom" class="text-danger small mt-1 d-block"></span>
+                    </div>
+
+                    <div class="col-12 border-top pt-4 mt-4 d-flex gap-2 justify-content-end">
+                        <a class="btn btn-outline-secondary px-4" asp-action="Index">Annuler</a>
+                        <button class="btn btn-primary px-4 d-inline-flex align-items-center shadow-sm" type="submit">
+                            <i class="bi bi-check-lg me-1.5"></i> Créer la catégorie
+                        </button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,53 @@
+﻿@model ProjetLibrairie.Models.Categorie
+
+@{
+    ViewData["Title"] = "Supprimer une catégorie";
+}
+
+<div class="d-flex align-items-center justify-content-between flex-wrap gap-3 mb-4">
+    <div>
+        <h2 class="fw-bold text-slate-900 mb-1">Confirmation de suppression</h2>
+        <div class="text-muted">Retrait d'une indexation du catalogue général.</div>
+    </div>
+    <a class="btn btn-outline-secondary d-inline-flex align-items-center" asp-action="Index">
+        <i class="bi bi-arrow-left me-2"></i> Annuler
+    </a>
+</div>
+
+<div class="row">
+    <div class="col-12 col-md-8 col-lg-6 mx-auto">
+        <div class="card border-0 shadow-sm border-top border-danger border-4">
+            <div class="card-body p-4 p-sm-5">
+
+                <div class="text-center mb-4">
+                    <div class="text-danger bg-danger bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px;">
+                        <i class="bi bi-exclamation-octagon fs-2"></i>
+                    </div>
+                    <h5 class="fw-bold text-slate-900">Voulez-vous vraiment supprimer cette catégorie ?</h5>
+                    <p class="text-muted small">Cette action peut affecter l'affichage des livres reliés si le nettoyage en base n'est pas automatisé.</p>
+                </div>
+
+                <div class="bg-light p-3 rounded-3 mb-4 border">
+                    <div class="row g-2 text-center text-sm-start">
+                        <div class="col-sm-4 text-muted small text-uppercase tracking-wider fw-semibold">ID Catégorie</div>
+                        <div class="col-sm-8 font-monospace fw-bold text-slate-900">#@Model.Id</div>
+
+                        <div class="col-sm-4 text-muted small text-uppercase tracking-wider fw-semibold">Libellé visé</div>
+                        <div class="col-sm-8 fw-bold text-danger">@Model.Nom</div>
+                    </div>
+                </div>
+
+                <form asp-action="Supprimer" method="post" class="d-flex gap-2 justify-content-center">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" asp-for="Id" />
+
+                    <a class="btn btn-outline-secondary px-4" asp-action="Index">Conserver la catégorie</a>
+                    <button type="submit" class="btn btn-danger px-4 d-inline-flex align-items-center shadow-sm">
+                        <i class="bi bi-trash me-1.5"></i> Supprimer définitivement
+                    </button>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>

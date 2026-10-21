@@ -1,0 +1,79 @@
+﻿@model ProjetLibrairie.Models.Commentaire
+
+@{
+    ViewData["Title"] = "Modifier le commentaire";
+}
+
+<div class="row justify-content-center">
+    <div class="col-12 col-md-8 col-lg-6">
+        <div class="d-flex align-items-center justify-content-between mb-4">
+            <div>
+                <h3 class="fw-bold text-slate-900 mb-1">Modifier votre commentaire</h3>
+                <div class="text-muted small">Ajustez votre message ou corrigez vos fautes de frappe.</div>
+            </div>
+        </div>
+
+        <div class="card border-0 shadow-sm rounded-4">
+            <div class="card-body p-4">
+                <form asp-action="Modifier" method="post">
+                    @Html.AntiForgeryToken()
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger border-0 small py-2"></div>
+
+                    <input type="hidden" asp-for="Id" />
+                    <input type="hidden" asp-for="DateCreation" />
+                    <input type="hidden" asp-for="DateModification" />
+
+                    <div class="mb-4">
+                        <label asp-for="Texte" class="form-label fw-bold text-slate-700">Votre message</label>
+                        <textarea asp-for="Texte" class="form-control rounded-3" rows="5"
+                                  placeholder="Modifiez votre commentaire..."></textarea>
+                        <span asp-validation-for="Texte" class="text-danger small"></span>
+                    </div>
+
+                    @* Bloc d'administration optionnel : Affiché uniquement si les listes 
+                       de modification de liaisons sont fournies par le contrôleur (Back-office admin) 
+                    *@
+                    @if (ViewBag.LivreId != null && ViewBag.AdherentId != null)
+                    {
+                        <div class="row g-3 mb-4 p-3 bg-light rounded-3 border">
+                            <div class="col-12 mb-1">
+                                <small class="text-muted fw-bold text-uppercase tracking-wider" style="font-size: 0.75rem;">
+                                    <i class="bi bi-gear-fill me-1"></i> Options de modération (Admin)
+                                </small>
+                            </div>
+                            <div class="col-md-6">
+                                <label asp-for="LivreId" class="form-label small text-muted">Associer au livre</label>
+                                <select asp-for="LivreId" class="form-select form-select-sm rounded-2" asp-items="ViewBag.LivreId"></select>
+                            </div>
+                            <div class="col-md-6">
+                                <label asp-for="AdherentId" class="form-label small text-muted">Auteur du commentaire</label>
+                                <select asp-for="AdherentId" class="form-select form-select-sm rounded-2" asp-items="ViewBag.AdherentId"></select>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        @* Si ce n'est pas un flux admin, on garde les liaisons intactes de manière invisible *@
+                        <input type="hidden" asp-for="LivreId" />
+                        <input type="hidden" asp-for="AdherentId" />
+                    }
+
+                    <div class="d-flex gap-2 justify-content-end border-top pt-3">
+                        <a href="javascript:history.back()" class="btn btn-outline-secondary px-4 rounded-3">
+                            Annuler
+                        </a>
+                        <button type="submit" class="btn btn-primary px-4 rounded-3 shadow-sm">
+                            <i class="bi bi-check-lg me-1"></i> Enregistrer les modifications
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

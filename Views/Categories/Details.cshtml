@@ -1,0 +1,104 @@
+﻿@model ProjetLibrairie.Models.Categorie
+
+@{
+    ViewData["Title"] = "Détails catégorie";
+}
+
+<div class="d-flex align-items-center justify-content-between flex-wrap gap-3 mb-4">
+    <div class="d-flex align-items-center gap-3">
+        <div class="bg-primary bg-opacity-10 text-primary rounded-3 p-2.5 d-flex align-items-center justify-content-center">
+            <i class="bi bi-bookmark-star fs-3"></i>
+        </div>
+        <div>
+            <h2 class="fw-bold text-slate-900 mb-0">@Model.Nom</h2>
+            <div class="text-muted">Indexation thématique : <span class="badge bg-light text-dark border">#@Model.Id</span></div>
+        </div>
+    </div>
+
+    <div class="d-flex gap-2">
+        <a class="btn btn-outline-secondary d-inline-flex align-items-center" asp-action="Index">
+            <i class="bi bi-arrow-left me-2"></i> Liste des catégories
+        </a>
+        <a class="btn btn-primary d-inline-flex align-items-center shadow-sm" asp-action="Modifier" asp-route-id="@Model.Id">
+            <i class="bi bi-pencil-square me-2"></i> Renommer
+        </a>
+    </div>
+</div>
+
+<div class="row g-4">
+    <div class="col-12 col-lg-4">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-header border-0 bg-transparent pt-4 px-4 pb-2">
+                <h5 class="fw-bold text-slate-900 mb-0">Résumé</h5>
+            </div>
+            <div class="card-body px-4 pb-4">
+                <div class="bg-light p-3 rounded-3 mb-3">
+                    <span class="text-muted small d-block mb-1 text-uppercase fw-semibold tracking-wider" style="font-size: 0.70rem;">Nom du catalogue</span>
+                    <span class="h6 fw-bold text-slate-900 mb-0">@Model.Nom</span>
+                </div>
+                <div class="bg-light p-3 rounded-3">
+                    <span class="text-muted small d-block mb-1 text-uppercase fw-semibold tracking-wider" style="font-size: 0.70rem;">Volume d'ouvrages</span>
+                    <span class="h6 fw-bold text-primary mb-0">
+                        <i class="bi bi-book me-1"></i> @(Model.Livres?.Count ?? 0) référence(s) liée(s)
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12 col-lg-8">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-header border-0 bg-transparent pt-4 px-4 pb-0 d-flex justify-content-between align-items-center">
+                <h5 class="fw-bold text-slate-900 mb-0">Ouvrages dans cette catégorie</h5>
+            </div>
+            <div class="card-body p-0 pt-3">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead>
+                            <tr>
+                                <th style="width: 45%;" class="ps-4">Titre de l'œuvre</th>
+                                <th style="width: 35%;">Auteur</th>
+                                <th class="text-center" style="width: 20%;">Disponibilité</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model.Livres == null || !Model.Livres.Any())
+                            {
+                                <tr>
+                                    <td colspan="3" class="text-muted py-5 text-center">
+                                        <i class="bi bi-book-half fs-2 d-block mb-2 opacity-40"></i>
+                                        Aucun livre n'est encore enregistré sous cette thématique.
+                                    </td>
+                                </tr>
+                            }
+                            else
+                            {
+                                foreach (var l in Model.Livres)
+                                {
+                                    <tr>
+                                        <td class="fw-semibold text-slate-900 ps-4">@l.Titre</td>
+                                        <td class="text-muted small">@l.Auteur</td>
+                                        <td class="text-center">
+                                            @if (l.Disponible)
+                                            {
+                                                <span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-10 px-2.5 py-1 rounded-pill small fw-semibold">
+                                                    <i class="bi bi-check-circle me-1"></i> En rayon
+                                                </span>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge bg-secondary bg-opacity-10 text-secondary border border-secondary border-opacity-10 px-2.5 py-1 rounded-pill small fw-semibold">
+                                                    <i class="bi bi-person-workspace me-1"></i> Emprunté
+                                                </span>
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

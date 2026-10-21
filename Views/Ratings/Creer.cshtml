@@ -1,0 +1,63 @@
+﻿@model ProjetLibrairie.Models.Rating
+
+@{
+    ViewData["Title"] = "Attribuer une note";
+}
+
+<div class="row justify-content-center">
+    <div class="col-12 col-md-8 col-lg-6">
+        <div class="d-flex align-items-center justify-content-between mb-4">
+            <div>
+                <h3 class="fw-bold text-slate-900 mb-1">Donner une note</h3>
+                <div class="text-muted small">Évaluez l'ouvrage pour guider les autres lecteurs.</div>
+            </div>
+        </div>
+
+        <div class="card border-0 shadow-sm rounded-4">
+            <div class="card-body p-4">
+                <form asp-action="Creer" method="post">
+                    @Html.AntiForgeryToken()
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger border-0 small py-2"></div>
+
+                    <div class="mb-4">
+                        <label asp-for="Valeur" class="form-label fw-bold text-slate-700">Votre évaluation</label>
+                        <select asp-for="Valeur" class="form-select form-select-lg rounded-3">
+                            <option value="5">⭐⭐⭐⭐⭐ — Excellent</option>
+                            <option value="4">⭐⭐⭐⭐ — Très bon</option>
+                            <option value="3">⭐⭐⭐ — Moyen</option>
+                            <option value="2">⭐⭐ — Médiocre</option>
+                            <option value="1">⭐ — Mauvais</option>
+                        </select>
+                        <span asp-validation-for="Valeur" class="text-danger small"></span>
+                    </div>
+
+                    @if (ViewBag.LivreId != null && ViewBag.AdherentId != null)
+                    {
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-6">
+                                <label asp-for="LivreId" class="form-label small text-muted">Livre</label>
+                                <select asp-for="LivreId" class="form-select form-select-sm" asp-items="ViewBag.LivreId"></select>
+                            </div>
+                            <div class="col-md-6">
+                                <label asp-for="AdherentId" class="form-label small text-muted">Adhérent</label>
+                                <select asp-for="AdherentId" class="form-select form-select-sm" asp-items="ViewBag.AdherentId"></select>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <input type="hidden" asp-for="LivreId" />
+                        <input type="hidden" asp-for="AdherentId" />
+                    }
+
+                    <div class="d-flex gap-2 justify-content-end border-top pt-3">
+                        <a href="javascript:history.back()" class="btn btn-outline-secondary px-4 rounded-3">Annuler</a>
+                        <button type="submit" class="btn btn-primary px-4 rounded-3 shadow-sm">
+                            Enregistrer la note
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

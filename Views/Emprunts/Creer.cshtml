@@ -1,0 +1,118 @@
+﻿@model ProjetLibrairie.Models.Emprunt
+@using ProjetLibrairie.Models
+
+@{
+    ViewData["Title"] = "Emprunter un livre";
+    var livre = ViewBag.Livre as Livre;
+    DateTime? dateLimite = ViewBag.DateLimite as DateTime?;
+}
+
+<div class="d-flex align-items-center justify-content-between flex-wrap gap-3 mb-4">
+    <div>
+        <h2 class="fw-bold text-slate-900 mb-1">Confirmer l'emprunt</h2>
+        <div class="text-muted">Vérifiez les modalités temporelles d'occupation de l'ouvrage.</div>
+    </div>
+    <a class="btn btn-outline-secondary d-inline-flex align-items-center" asp-action="LivresDisponibles">
+        <i class="bi bi-arrow-left me-2"></i> Changer de livre
+    </a>
+</div>
+
+@if (livre == null)
+{
+    <div class="alert alert-danger border-0 shadow-sm d-flex align-items-center gap-2" role="alert">
+        <i class="bi bi-exclamation-octagon-fill fs-4"></i>
+        <div><strong>Ouvrage introuvable :</strong> La référence demandée n'existe pas ou a été retirée du catalogue.</div>
+    </div>
+}
+else
+{
+    <div class="row g-4">
+        <div class="col-12 col-lg-7">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-header bg-transparent border-0 pt-4 px-4 pb-2">
+                    <h5 class="fw-bold text-slate-900 mb-0">Informations de l'œuvre</h5>
+                </div>
+                <div class="card-body p-4 pt-2">
+                    <div class="d-flex align-items-start gap-3 bg-light p-3.5 rounded-3 mb-3">
+                        <div class="bg-primary text-white rounded p-3 d-flex align-items-center justify-content-center shadow-sm" style="width: 54px; height: 54px;">
+                            <i class="bi bi-book-half fs-3"></i>
+                        </div>
+                        <div>
+                            <h4 class="fw-bold text-slate-900 mb-1">@livre.Titre</h4>
+                            <p class="text-muted mb-0"><i class="bi bi-person me-1"></i> Rédigé par <strong>@livre.Auteur</strong></p>
+                        </div>
+                    </div>
+
+                    <div class="row g-2">
+                        <div class="col-sm-6">
+                            <div class="border rounded p-3 text-center bg-white shadow-sm">
+                                <span class="text-muted small d-block mb-2">Classification thématique</span>
+                                <span class="badge bg-primary-subtle text-primary border border-primary-subtle px-3 py-2 fw-semibold fs-6">
+                                    <i class="bi bi-tag-fill me-1"></i> @(livre.Categorie?.Nom ?? "Général")
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="border rounded p-3 text-center bg-white">
+                                <span class="text-muted small d-block mb-1">Réglementation</span>
+                                <span class="badge bg-info bg-opacity-10 text-info border border-info border-opacity-10 px-3 py-1.5 fw-semibold"><i class="bi bi-calendar-event me-1"></i> Durée : 14 jours</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="alert alert-light border text-muted small mt-4 mb-0 d-flex gap-2">
+                        <i class="bi bi-info-circle-fill text-primary mt-0.5"></i>
+                        <span>En confirmant cette affectation, l'ouvrage sera retiré instantanément des rayons virtuels de l'université pour devenir indisponible pour les autres étudiants.</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-lg-5">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-header bg-transparent border-0 pt-4 px-4 pb-2">
+                    <h5 class="fw-bold text-slate-900 mb-0">Validation du contrat</h5>
+                </div>
+                <div class="card-body p-4 pt-2 d-flex flex-column justify-content-between">
+
+                    <form asp-action="Creer" method="post" class="row g-4 h-100">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" asp-for="LivreId" />
+
+                        @if (!ViewData.ModelState.IsValid)
+                        {
+                            <div class="col-12">
+                                <div class="alert alert-danger border-0 shadow-sm p-3 mb-0" role="alert">
+                                    <div asp-validation-summary="All" class="small text-danger"></div>
+                                </div>
+                            </div>
+                        }
+
+                        <div class="col-12">
+                            <div class="bg-light p-3 rounded-3 text-center border">
+                                <div class="text-muted small text-uppercase tracking-wider fw-bold mb-1">Date limite de restitution estimée</div>
+                                <div class="h3 fw-bold text-primary mb-0 font-monospace">
+                                    @(dateLimite.HasValue? dateLimite.Value.ToString("dd MMMM yyyy") : DateTime.Now.AddDays(14).ToString("dd MMMM yyyy"))
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-12 mt-auto d-grid gap-2">
+                            <button type="submit" class="btn btn-primary btn-lg d-inline-flex align-items-center justify-content-center shadow-sm">
+                                <i class="bi bi-check-circle me-2"></i> Confirmer l'emprunt
+                            </button>
+                            <a asp-action="LivresDisponibles" class="btn btn-outline-secondary">
+                                Revenir en arrière
+                            </a>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

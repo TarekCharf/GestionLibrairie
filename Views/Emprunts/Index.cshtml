@@ -1,0 +1,111 @@
+﻿@model IEnumerable<ProjetLibrairie.Models.Emprunt>
+
+@{
+    ViewData["Title"] = "Gestion des emprunts";
+}
+
+<div class="d-flex align-items-center justify-content-between flex-wrap gap-3 mb-4">
+    <div>
+        <h2 class="fw-bold text-slate-900 mb-1">Gestion des emprunts</h2>
+        <div class="text-muted">Suivez et contrôlez les flux de livres au sein de l'établissement.</div>
+    </div>
+    <div class="badge bg-primary bg-opacity-10 text-primary px-3 py-2 rounded-pill fw-semibold">
+        <i class="bi bi-clock-history me-1"></i> @(Model?.Count() ?? 0) transactions enregistrées
+    </div>
+</div>
+
+<div class="card border-0 shadow-sm">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead>
+                    <tr>
+                        <th class="ps-4">Livre</th>
+                        <th>Adhérent</th>
+                        <th>Date emprunt</th>
+                        <th>Date limite</th>
+                        <th>Date retour</th>
+                        <th class="text-center">Statut</th>
+                        <th class="text-end pe-4">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model == null || !Model.Any())
+                    {
+                        <tr>
+                            <td colspan="7" class="text-muted py-5 text-center">
+                                <div class="mb-2"><i class="bi bi-inbox fs-1 opacity-50"></i></div>
+                                Aucun flux d'emprunt n'est référencé pour le moment.
+                            </td>
+                        </tr>
+                    }
+                    else
+                    {
+                        foreach (var e in Model)
+                        {
+                            var limite = e.DateEmprunt.AddDays(14);
+                            bool rendu = e.DateRetour.HasValue;
+                            bool enRetard = !rendu && DateTime.Now.Date > limite.Date;
+
+                            <tr>
+                                <td class="ps-4">
+                                    <div class="fw-bold text-slate-900">@(e.Livre?.Titre ?? "(Livre introuvable)")</div>
+                                    <div class="text-muted small">@e.Livre?.Auteur</div>
+                                </td>
+                                <td>
+                                    <div class="fw-semibold text-slate-700">@(e.Adherent == null ? "-" : $"{e.Adherent.Nom} {e.Adherent.Prenom}")</div>
+                                    <div class="text-muted small" style="font-size: 0.8rem;">@e.Adherent?.Email</div>
+                                </td>
+                                <td class="text-secondary font-monospace small">@e.DateEmprunt.ToString("dd M05, yyyy")</td>
+                                <td class="text-secondary font-monospace small">@limite.ToString("dd M05, yyyy")</td>
+                                <td class="font-monospace small">
+                                    @if (rendu)
+                                    {
+                                        <span class="text-success fw-semibold"><i class="bi bi-calendar-check me-1"></i>@e.DateRetour?.ToString("dd M05, yyyy")</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">-</span>
+                                    }
+                                </td>
+                                <td class="text-center">
+                                    @if (rendu)
+                                    {
+                                        <span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-10 px-2.5 py-1 rounded-pill small fw-semibold">
+                                            <i class="bi bi-check2-circle me-1"></i> Rendu
+                                        </span>
+                                    }
+                                    else if (enRetard)
+                                    {
+                                        <span class="badge bg-danger bg-opacity-10 text-danger border border-danger border-opacity-10 px-2.5 py-1 rounded-pill small fw-semibold">
+                                            <i class="bi bi-exclamation-circle me-1"></i> En retard
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-warning bg-opacity-10 text-warning border border-warning border-opacity-10 px-2.5 py-1 rounded-pill small fw-semibold">
+                                            <i class="bi bi-hourglass-split me-1"></i> En cours
+                                        </span>
+                                    }
+                                </td>
+                                <td class="text-end pe-4">
+                                    <div class="d-inline-flex gap-1">
+                                        <a class="btn btn-sm btn-outline-secondary" asp-action="Details" asp-route-id="@e.Id">
+                                            <i class="bi bi-eye"></i> Détails
+                                        </a>
+                                        @if (!rendu)
+                                        {
+                                            <a class="btn btn-sm btn-primary d-inline-flex align-items-center shadow-sm" asp-action="Retour" asp-route-id="@e.Id">
+                                                <i class="bi bi-arrow-return-left me-1"></i> Retour
+                                            </a>
+                                        }
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

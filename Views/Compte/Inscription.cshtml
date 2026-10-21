@@ -1,0 +1,70 @@
+﻿@model ProjetLibrairie.ViewModels.InscriptionViewModel
+@{
+    ViewData["Title"] = "Inscription adhérent";
+    Layout = "_LayoutAuth";
+}
+
+<form asp-action="Inscription" method="post">
+    @Html.AntiForgeryToken()
+
+    <div class="mb-3 pb-2 border-bottom">
+        <span class="fw-bold text-dark small text-uppercase"><i class="bi bi-shield-lock me-1"></i> Sécurité du compte</span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Login" class="form-label fw-semibold small text-secondary">Nom d'utilisateur (Login)</label>
+        <input asp-for="Login" class="form-control bg-light rounded-3" autocomplete="username" placeholder="Choisissez un identifiant" />
+        <span asp-validation-for="Login" class="text-danger small"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="MotDePasse" class="form-label fw-semibold small text-secondary">Mot de passe</label>
+        <input asp-for="MotDePasse" class="form-control bg-light rounded-3" type="password" autocomplete="new-password" placeholder="••••••••" />
+        <span asp-validation-for="MotDePasse" class="text-danger small"></span>
+    </div>
+
+    <div class="mb-4">
+        <label asp-for="ConfirmerMotDePasse" class="form-label fw-semibold small text-secondary">Confirmer le mot de passe</label>
+        <input asp-for="ConfirmerMotDePasse" class="form-control bg-light rounded-3" type="password" autocomplete="new-password" placeholder="••••••••" />
+        <span asp-validation-for="ConfirmerMotDePasse" class="text-danger small"></span>
+    </div>
+
+    <div class="mb-3 pb-2 border-bottom">
+        <span class="fw-bold text-dark small text-uppercase"><i class="bi bi-person-lines-fill me-1"></i> Informations civiles</span>
+    </div>
+
+    <div class="row g-2 mb-3">
+        <div class="col-6">
+            <label asp-for="Nom" class="form-label fw-semibold small text-secondary">Nom</label>
+            <input asp-for="Nom" class="form-control bg-light rounded-3" placeholder="Votre nom" />
+            <span asp-validation-for="Nom" class="text-danger small"></span>
+        </div>
+        <div class="col-6">
+            <label asp-for="Prenom" class="form-label fw-semibold small text-secondary">Prénom</label>
+            <input asp-for="Prenom" class="form-control bg-light rounded-3" placeholder="Votre prénom" />
+            <span asp-validation-for="Prenom" class="text-danger small"></span>
+        </div>
+    </div>
+
+    <div class="mb-4">
+        <label asp-for="Email" class="form-label fw-semibold small text-secondary">Adresse Email</label>
+        <input asp-for="Email" class="form-control bg-light rounded-3" autocomplete="email" placeholder="nom@exemple.com" />
+        <span asp-validation-for="Email" class="text-danger small"></span>
+    </div>
+
+    <div asp-validation-summary="ModelOnly" class="alert alert-danger border-0 small py-2 my-3"></div>
+
+    <button class="btn btn-success w-100 py-2 rounded-3 fw-bold mb-3 shadow-sm" type="submit">
+        Créer mon compte <i class="bi bi-check-circle ms-1"></i>
+    </button>
+
+    <div class="text-center pt-2 border-top">
+        <a class="text-decoration-none small fw-medium" asp-action="Connexion">
+            <i class="bi bi-arrow-left small me-1"></i> J'ai déjà un compte
+        </a>
+    </div>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

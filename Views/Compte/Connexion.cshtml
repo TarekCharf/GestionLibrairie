@@ -1,0 +1,53 @@
+﻿@model ProjetLibrairie.ViewModels.LoginViewModel
+@{
+    ViewData["Title"] = "Connexion";
+    Layout = "_LayoutAuth";
+}
+
+<form asp-action="Connexion" method="post">
+    @Html.AntiForgeryToken()
+
+    <div class="mb-3">
+        <label asp-for="Role" class="form-label fw-semibold small text-secondary">Type de profil</label>
+        <div class="input-group">
+            <span class="input-group-text bg-light text-muted border-end-0"><i class="bi bi-person-badge"></i></span>
+            <select asp-for="Role" class="form-select bg-light border-start-0">
+                <option value="Admin">Administrateur</option>
+                <option value="Adherent">Adhérent</option>
+            </select>
+        </div>
+        <span asp-validation-for="Role" class="text-danger small"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Identifiant" class="form-label fw-semibold small text-secondary">Identifiant (Login)</label>
+        <div class="input-group">
+            <span class="input-group-text bg-light text-muted border-end-0"><i class="bi bi-person"></i></span>
+            <input asp-for="Identifiant" class="form-control bg-light border-start-0" autocomplete="username" placeholder="Ex: jdoe" />
+        </div>
+        <span asp-validation-for="Identifiant" class="text-danger small"></span>
+    </div>
+
+    <div class="mb-4">
+        <label asp-for="MotDePasse" class="form-label fw-semibold small text-secondary">Mot de passe</label>
+        <div class="input-group">
+            <span class="input-group-text bg-light text-muted border-end-0"><i class="bi bi-lock"></i></span>
+            <input asp-for="MotDePasse" class="form-control bg-light border-start-0" type="password" autocomplete="current-password" placeholder="••••••••" />
+        </div>
+        <span asp-validation-for="MotDePasse" class="text-danger small"></span>
+    </div>
+
+    <div asp-validation-summary="ModelOnly" class="alert alert-danger border-0 small py-2 mb-3"></div>
+
+    <button class="btn btn-primary w-100 py-2 rounded-3 fw-bold mb-3 shadow-sm" type="submit">
+        Se connecter <i class="bi bi-arrow-right ms-1"></i>
+    </button>
+
+    <div class="text-center pt-2 border-top">
+        <a class="text-decoration-none small fw-medium" asp-action="Inscription">Créer un compte adhérent</a>
+    </div>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

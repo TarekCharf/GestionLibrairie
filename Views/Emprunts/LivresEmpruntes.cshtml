@@ -1,0 +1,66 @@
+﻿@model IEnumerable<ProjetLibrairie.Models.Livre>
+@using ProjetLibrairie.Helpers
+
+@{
+    ViewData["Title"] = "Livres empruntés";
+    bool isAdh = AuthSession.EstAdherent(Context);
+}
+
+<div class="d-flex align-items-center justify-content-between flex-wrap gap-3 mb-4">
+    <div>
+        <h2 class="fw-bold text-slate-900 mb-1">Livres hors rayon</h2>
+        <div class="text-muted">Index des ouvrages momentanément indisponibles pour le prêt.</div>
+    </div>
+</div>
+
+<div class="card border-0 shadow-sm">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead>
+                    <tr>
+                        <th class="ps-4">Titre de l'œuvre</th>
+                        <th>Auteur</th>
+                        <th>Catégorie</th>
+                        <th class="text-center">Statut global</th>
+                        <th class="text-end pe-4">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model == null || !Model.Any())
+                    {
+                        <tr>
+                            <td colspan="5" class="text-muted py-5 text-center">
+                                <div class="mb-2"><i class="bi bi-shield-check fs-1 opacity-40"></i></div>
+                                Merveilleux ! Tous nos livres sont actuellement rangés en bibliothèque.
+                            </td>
+                        </tr>
+                    }
+                    else
+                    {
+                        foreach (var l in Model)
+                        {
+                            <tr>
+                                <td class="fw-bold text-slate-900 ps-4">@l.Titre</td>
+                                <td class="text-muted small">@l.Auteur</td>
+                                <td>
+                                    <span class="badge bg-light text-secondary border">@(l.Categorie?.Nom ?? "-")</span>
+                                </td>
+                                <td class="text-center">
+                                    <span class="badge bg-secondary bg-opacity-10 text-secondary border border-secondary border-opacity-10 px-2.5 py-1 rounded-pill small fw-semibold">
+                                        <i class="bi bi-person-workspace me-1"></i> En circulation
+                                    </span>
+                                </td>
+                                <td class="text-end pe-4">
+                                    <a class="btn btn-sm btn-outline-secondary" asp-controller="Livres" asp-action="Details" asp-route-id="@l.Id">
+                                        Fiche livre
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
